@@ -1,0 +1,34 @@
+The first step is to create  setup_mail.rb file under config/initializers
+
+in that file  fill all those details needed to setup smtp
+ActionMailer::Base.smtp_settings=
+{
+	:address => "smtp.gmail.com",
+	:port => 587,
+	:domain => "gmail.com",
+	:user_name => "xxxxxxxxxxx",
+	:password => "xxxxxxxxxx",
+	:authentication => "plain",
+	:enable_starttls_auto => true
+}
+
+ActionMailer::Base.default_url_options[:host]="localhost:3000"
+
+
+then in your controller call the mail function under creating new data as
+
+UserMailer.registration_confirmation(@user).deliver
+
+then run rails mailer mailer_name 
+in app/mailers/mailer_name.rb file
+
+class UserMailer < ActionMailer::Base
+  def registration_confirmation(user)
+  	@user=user
+ 
+  	 attachments.inline["#{user.image_identifier}"]=File.read("public#{user.image.to_s}")
+  	mail(:to => user.mail, :subject=> "Registered",  :from => "navinkumar.ideology@gmail.com")
+  end
+end
+
+The path may be vary by your system and which file you need to upload and thats all
